@@ -1,0 +1,15 @@
+//**** $and
+// shb condition full fill korte hobe.
+// emn data cai, zader gender = female,  age greater than 15, less than equal 30. oder age & gender cai. sort hobe assending order e.
+db.test.find( {$and:[ { gender:{$eq: 'Female'} } , {age: {$gt:15, $lte:30}} ] }, {age:1, gender:1} ).sort({ age:1 })
+
+
+
+//**** $or
+// zekono 1ta condition full fill korte hobe.
+// emn data cai, zader gender = female,  age greater than 15, less than equal 30. zekono ekta condition holei hobe. oder age & gender cai. sort hobe assending order e.
+db.test.find( {$or:[ { gender:{$eq: 'Female'} } , {age: {$gt:15, $lte:30}} ] }, {age:1, gender:1} ).sort({ age:1 })
+// emn data cai zar interest travelling or cooking.
+db.test.find( {$or:[ { interests:'Traveling' } , { interests:'Cooking' } ] }, {age:1, gender:1} ).sort({ age:1 })
+// zader js or python er skill ache oder data
+db.test.find({ $or:[ { "skills.name": "JAVASCRIPT" }, { "skills.name": "PYTHON" } ] }, {age: 1} )
