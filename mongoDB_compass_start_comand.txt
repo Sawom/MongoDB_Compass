@@ -1,0 +1,7 @@
+//after open mongoDB compass
+show dbs // database gula show korbe
+use database_name // use er por database er nam ta dite hobe
+show collections // collection gula dekhabe
+db.test.findOne({age:17}) // test queries.
+
+//erpor ze kono queries calay dekho output ashbe
