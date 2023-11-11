@@ -1,0 +1,19 @@
+db.createCollection('test') //collection create kore
+db.getCollection('test') // database get kore all docs
+db.test.insertOne({name : 'ars'}) // 1ta insert kore
+db.test.insertMany({name : 'ars'},{name : 'lan'}) // 1 er beshi insert kore database e
+
+
+
+//****** findOne()
+db.test.findOne({age:17})
+
+//zodi multiple data diye find kori like, age:21, gender: female lagbe.
+db.test.find({age:21}, {gender: 'female'})
+
+//field filtering** dhori zader gender female tader name.email,gender cai.
+// tokhon zader gender female diye find kore pore ,{} diye baki field gula 1 kore dibo.
+db.test.find({gender:'Male'},{name: 1, email: 1, gender: 1})
+
+//findOne() diyeo kora zay
+db.test.findOne({gender:'Male'},{name: 1, email: 1, gender: 1})
