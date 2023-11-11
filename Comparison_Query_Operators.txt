@@ -1,0 +1,77 @@
+//***** $eq, 
+//equal theke eq ashche.
+db.test.findOne({gender:'Female'}) 
+etake,
+db.test.findOne({gender: {$eq: 'Female'}}) likha zay
+or 
+find() diyeo kora zay
+db.test.find({gender: {$eq: 'Female'}})
+
+
+
+//***** $ne,
+//not equal theke ne ashche.
+db.test.findOne({gender: {$ne: 'Female'}})
+or 
+find() diyeo kora zay
+db.test.find({gender: {$ne: 'Female'}})
+
+
+
+//***** $gt,
+// greater than
+db.test.find({age: {$gt: 18}} )
+//**** sort kora zay. ascending order e korar jnno '1' dea lage
+db.test.find({age: {$gt: 18} }).sort({age : 1})
+
+
+
+//***** $lt,
+// less than
+db.test.find({age: {$lt: 18}} )
+
+
+
+//***** $gte,
+// greater than equal
+db.test.find({age: {$gte: 18}} )
+
+
+
+//***** $lte,
+// less than equal
+db.test.find({age: {$lte: 18}} )
+
+
+
+//***** implicit and
+//** same field er moddhe range korte bolle eivabe kora zay**
+//** example: 18bochor theke beshi and 30 bochor er kom emn 'age' er manush cai mane data cai.
+db.test.find({age: {$lt: 30, $gt:18}}, {age:1}).sort({age:1})
+
+**emn zodi hoy 30 or er beshi and 18 or er kom. ekhane gte, lte mane 'greater than equal'  'less than equal' dite pari.
+db.test.find({age: {$lte: 30, $gte:18}}, {age:1}).sort({age:1})
+** sort na korle nai**
+db.test.find({age: {$lte: 30, $gte:18}}, {age:1})
+
+// more than one field. like age, gender
+db.test.find({ gender: 'Female', age: {$lte: 30, $gte:18}}, {age:1, gender:1}).sort({age:1})
+
+//**** for multiple operator
+db.test.find({gender:{$eq:'Female'}, age:{ $gte:18, $lte:30 } }, {age:1 , gender:1} ).sort({age:1})
+
+
+
+//**** $in,
+// include. 
+// example: age field er theke ami 20,22,24,26,30 bochorer female gender cai.
+db.test.find({gender:{$eq: 'Female'}, age:{$in: [20,22,24,26,30] }} , {age: 1, gender: 1} )
+++ gaming, cooking e interest ache 
+db.test.find({gender:{$eq: 'Female'}, age:{$in: [20,22,24,26,30] }, interests: { $in: ['Cooking' , 'Gaming'] }  } , {age: 1, gender: 1} )
+
+
+
+//**** $nin,
+// not include. 
+// example: age field er theke ami 20,22,24,26,30 bochorer female gender cai na.
+db.test.find({gender:{$eq: 'Female'}, age:{$nin: [20,22,24,26,30] }} , {age: 1, gender: 1} )
