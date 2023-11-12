@@ -1,0 +1,9 @@
+// $all
+// match korle result dibe. position mattar kore na.
+db.test.find({ interests:{ $all: ['Travelling', 'Reading', 'Gaming'] } }, {interests: 1} )
+
+
+
+//**** $elemMatch
+//object match korle return kore
+db.test.find({ skills: { $elemMatch: { name:'JAVASCRIPT', level:"Expert" } } }, {skills: 1})
