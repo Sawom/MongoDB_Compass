@@ -1,0 +1,63 @@
+//**** $set
+// updateOne er sathe update kore kono value
+// replace kore new value dey
+db.test.updateOne( { _id: ObjectId('6406ad63fc13ae5a40000065') }, { $set:{ age:18 } } )
+// set city as 'dhaka'
+db.test.updateOne({ _id: ObjectId('6406ad63fc13ae5a40000065') } , { $set: { 'address.city': 'dhaka' } } )
+//multiple o set kora zay. example: city = dhaka and country = bangladesh
+db.test.updateOne({ _id: ObjectId('6406ad63fc13ae5a40000065') } , { $set: { 'address.city': 'dhaka', 'address.country': 'Bangladesh' } } )
+// for check
+db.test.find({ _id: ObjectId('6406ad63fc13ae5a40000065') }) // id diye check kora zay
+
+
+
+
+//**** $addToSet
+// replace kore na. add kore just.
+db.test.updateOne( { _id: ObjectId('6406ad63fc13ae5a40000065') }, { $addToSet:{ interests:"Writting" } } )
+
+
+
+
+//**** $each
+// more than one,  zodi add korte cai array er moddhe. tokhn each dea hoy
+// duplicate entry dey na
+db.test.updateOne( { _id: ObjectId('6406ad63fc13ae5a40000065') }, { $addToSet:{ interests: { $each: ['gardening', 'driving'] } } } , {interests: 1} )
+
+
+
+
+//**** $push
+// duplicate entry dey
+db.test.updateOne( { _id: ObjectId('6406ad63fc13ae5a40000065') }, { $push:{ interests: { $each: ['gardening', 'driving'] } } } , {interests: 1} )
+
+
+
+
+//**** $pop
+// { $pop:{friends:1} } eta diye 1st item ta remove korche.
+db.test.updateOne({ _id: ObjectId('6406ad63fc13ae5a40000065') } , { $pop:{friends:1} } )
+// { $pop:{friends: -1} } eta diye last item ta remove korche.
+db.test.updateOne({ _id: ObjectId('6406ad63fc13ae5a40000065') } , { $pop:{friends:1} } )
+
+
+
+//**** $pull
+// zar sathe match korbe oita remove korbe
+db.test.updateOne({ _id: ObjectId('6406ad63fc13ae5a40000065') } , { $pull:{friends: 'Mir Hussain'} } )
+
+
+
+//**** $pullAll
+// multiple value remove korbe
+db.test.updateOne({ _id: ObjectId('6406ad63fc13ae5a40000065') } , { $pullAll:{friends: ['Tanmoy Parvez', 'Fahim Ahammed Firoz'] } } )
+
+
+
+//**** delete
+db.test.deleteOne({ _id: ObjectId('6406ad63fc13ae5a40000065') })
+
+
+
+//**** drop collection
+db.post.drop( { writeConcern: {w:1} } )
