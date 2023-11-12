@@ -1,0 +1,9 @@
+//**** $set
+// updateOne er sathe update kore kono value
+db.test.updateOne( { _id: ObjectId('6406ad63fc13ae5a40000065') }, { $set:{ age:18 } } )
+
+
+
+
+
+
