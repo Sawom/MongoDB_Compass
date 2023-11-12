@@ -1,0 +1,17 @@
+//**** $exists
+// field thakle shei daatagula dibe.
+db.test.find( { age: {$exists: true} } )
+
+
+
+//**** $type
+// field kon typer seta return kore
+db.test.find({ age: { $type: 'number' } })
+db.test.find({ age: { $type: 'array' } })
+
+
+
+//**** $size
+// kono field e kotogula data ache shei data gula return kore
+// example: zodi jante cai kader 4ta friend ache sei datagula
+db.test.find({ friends: { $size:4} })
