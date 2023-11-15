@@ -1,0 +1,248 @@
+//*** aggregate, match
+db.test.aggregate([ { $match: { gender:'Female' ,age: { $lt:25 } } } , 
+	{ $project: { name:1, gender:1,age:1 } } ])
+
+
+
+
+//** addFields
+// orginal document k change kore na
+db.test.aggregate([ {$match:{ gender:'Female' }},
+         {$addFields:{ course: 'level-2', edutech: 'hero' }},
+         {$project:{ course:1,edutech:1 }}
+ ])
+
+// sobar salary er sum ta mane zogfol lagbe
+db.test.aggregate([ 
+  {$group:{ _id: null, totalSalary:{$sum: '$salary'} }}
+])
+
+
+//**** group, ++ grpup er zoto operator docs theke dekhte hobe
+
+//**** $out
+// eta diye notun collection e field add kore
+// $addfields diye collection e new fields add kore 
+db.test.aggregate([ { $match:{ gender:'Female' } } ,
+                   {$addFields:{ course:'level-2' , edutech:'programming hero', duration:'6 month' } },
+                   { $out: 'students' //new collection name } ])
+
+
+
+
+//**** $merge , ager collection e merge kore data.
+db.test.aggregate([ { $match:{ gender:'Female' } } ,
+                   {$addFields:{ course:'level-2' , edutech:'programming hero', duration:'6 month' } },
+                   { $merge: 'test' //kon collection name e merge korbo seta } ])
+
+
+
+//**** $unwind
+db.test.aggregate([
+  {$unwind: '$friends'},
+  { $group: { _id: '$friends', count:{ $sum:1} } }
+])
+
+
+
+//**** group
+// kono field er opr base kore group kora zay
+db.test.aggregate([ { $group:{ _id:"$country" } } ])
+// count, group
+db.test.aggregate([ 
+  {$group:{ _id: '$gender', count:{$sum:1} }}
+])
+
+
+
+//**** max
+db.test.aggregate([ 
+  {$group:{ _id: null, totalSalary:{$sum: '$salary'}, 
+maxSalary:{ $max: '$salary' } }}
+])
+
+//**** min & avg salary
+db.test.aggregate([ 
+  {$group:{ _id: null, totalSalary:{$sum: '$salary'}, 
+maxSalary:{ $max: '$salary' },
+minSalary: {$min: '$salary' },
+avg: { $avg: '$salary' }
+ }}
+])
+
+
+
+**** example:2
+db.test.aggregate([ 
+  {$group:{ _id: null, totalSalary:{$sum: '$salary'}, 
+maxSalary:{ $max: '$salary' },
+minSalary: {$min: '$salary' },
+avg: { $avg: '$salary' }
+ }},
+//avg er nam zodi change korte cai
+  { $project:{ totalSalary:1, maxSalary:1, minSalary:1 , 
+averageSalary:'$avg' } }
+])
+
+
+
+//**** push
+// extra kono field dekhte caile
+db.test.aggregate([ { $group:{_id: '$address.country' , count:{$sum:1} , nameDekhaw:{$push: '$name'} } } ])
+
+
+//**** salary sum
+db.test.aggregate([ { $group:{ _id:null, totalSalary:{$sum: '$salary'} } } ])
+
+
+
+//**** total, max, min, avg salary
+db.test.aggregate([ { $group:{ _id:null, totalSalary:{$sum: '$salary'}, 
+maxSalary:{$max: '$salary' } , minSalary: { $min: '$salary' },
+avgSalary:{ $avg: '$salary' }
+ } } ])
+
+
+
+//**** range with subtract
+// subtract 'project' er vitor korte hoy
+db.test.aggregate([ { $group:{ _id:null, totalSalary:{$sum: '$salary'}, 
+maxSalary:{$max: '$salary' } , minSalary: { $min: '$salary' },
+avgSalary:{ $avg: '$salary' } 
+ } } ,  
+{ $project:{ totalSalary:1, maxSalary:1, minSalary:1,
+range: { $subtract:[ '$maxSalary', '$minSalary' ] }} }
+])
+
+
+
+//**** $$ROOT
+//full document dekhte caile
+db.test.aggregate([ { $group:{_id: '$address.country' , count:{$sum:1} , fulldoc:{$push: '$$ROOT'} } } ])
+
+// zodi pura docs er just name dekhte cai
+db.test.aggregate([ { $group:{_id: '$address.country' , count:{$sum:1} , fulldoc:{$push: '$$ROOT'} } } ,
+                   { $project:{"fulldoc.name": 1}} ])
+
+
+//**** group, range salary. max r min salary er moddhe difference
+db.test.aggregate([ 
+  {$group:{ _id: null, totalSalary:{$sum: '$salary'}, 
+maxSalary:{ $max: '$salary' },
+minSalary: {$min: '$salary' },
+avg: { $avg: '$salary' }
+ }},
+//avg er nam zodi change korte cai
+  { $project:{ totalSalary:1, maxSalary:1, minSalary:1 , 
+averageSalary:'$avg',
+rangeSalary: {$subtract:[ '$maxSalary', '$minSalary' ]} } }
+])
+
+
+
+//** boish onuzai kon boisher kemon interest**
+db.test.aggregate([ { $unwind: '$interests' } ,
+                  { $group:{_id: '$age', 
+		interestPerAge: { $push:'$interests' } } }
+])
+
+
+
+//**** $unwind array take venge ekta single single kore docs banay zader id same thake.
+db.test.aggregate([ {$unwind: '$friends' } ,
+                   { $group: {_id: '$friends'}} ])
+
+
+//**** $unwind diye kon item koybar ache jana zay
+db.test.aggregate([ {$unwind: '$friends' } ,
+                   { $group: {_id: '$friends', count:{ $sum: 1} }} ])
+
+
+
+//** kon 'age' er ki interests
+db.test.aggregate([ { $unwind: '$interests' },
+                   { $group: { _id: '$age', interestPerAge:{$push: '$interests' } } }
+ ]) 
+
+
+
+
+//**** $bucket
+db.test.aggregate([
+{
+$bucket:{ 
+	groupBy: "$age",
+	boundaries: [20,40,60],
+        default: '80 er opor zara ache',
+	output:{
+		count:{ $sum: 1 },
+		zaraAcheOderNam:{$push: '$name' //'$$ROOT' dile full docs tai ashe }
+	}
+ }
+}
+])
+
+
+
+//**or
+db.test.aggregate([
+{
+$bucket:{ 
+		groupBy: "$age",
+		boundaries: [20,40,60],
+      default: '80 er opor zara ache',
+output:{
+	count:{ $sum: 1 },
+	zaraAcheOderNam:{$push: 'name'}
+}
+ }
+},
+	//stage 2
+  { $sort:{ count: -1 }},
+	//stage 3
+  { $project: {count: 1} }
+
+])
+
+// limit o kora zay. limit e zeikoyta cabo oi koyta docs dibe
+db.test.aggregate([
+{
+$bucket:{ 
+		groupBy: "$age",
+		boundaries: [20,40,60],
+      default: '80 er opor zara ache',
+output:{
+	count:{ $sum: 1 }, // koyta docs ache seta dibe
+	zaraAcheOderNam:{$push: 'name'}
+}
+ }
+},
+	//stage 2
+  { $sort:{ count: -1 }},
+	//stage 3
+  { $project: {count: 1} },
+  {$limit: 2} // limit = 2, 2ta result ashbe
+
+])
+
+
+//**** $facet, multiple pipeline aggregation stage
+db.test.aggregate ( [ 
+{$facet:{ 
+	// pipeline1
+ 'friendsCount': [ 
+//stage1
+   {$unwind: '$friends' },
+// stage:2
+   {$group:{ _id: 'friends', count: {$sum:1} }}
+ ] ,
+//pipeline2
+'educationCount':[
+	//stage1
+  {$unwind: '$education'},
+//stage2
+  {$group: { _id: '$education', count:{ $sum:1 } } }
+]
+
+ }}
+] )
