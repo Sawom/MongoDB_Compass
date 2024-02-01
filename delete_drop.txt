@@ -1,0 +1,5 @@
+// collection theke 1ta data delete kore
+db.test.deleteOne({_id: ObjectId("6406ad63fc13ae5a40000065") })
+
+// pura collection delete kore
+db.test.drop({ writeConcern: {w:1} })
