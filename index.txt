@@ -1,0 +1,14 @@
+// create index. email er opr index kora. ete run time kome ashe. but memory khay. tai small database e eta use kora lagbe na
+db.getCollection("massive-data").createIndex({email:1})
+
+
+// compound index
+db.getCollection("massive-data").createIndex({email:1, age:1})
+
+
+// search
+
+//text index
+db.getCollection("massive-data").createIndex({about: 'text'})
+
+db.getCollection("massive-data").find({ $text: {$search: 'dolor'} }).project({about: 1})
